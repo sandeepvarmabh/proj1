@@ -35,6 +35,13 @@
     - name: extract archive
       become: yes
       unarchive: src=/home/ubuntu/tomcat/apache-tomcat-9.0.8.tar.gz dest=/home/ubuntu/tomcat remote_src=yes
-    - name: start apache
+    - name: change ownership
       become: yes
-      shell: /home/ubuntu/tomcat/apache-tomcat-9.0.8/bin/startup.sh
+      file: path=/home/ubuntu/tomcat owner=ubuntu group=ubuntu state=directory recurse=yes
+    - name: Start application
+      shell: "/home/ubuntu/tomcat/apache-tomcat-9.0.8/bin/startup.sh"
+      args:
+        chdir: "/tmp"
+        executable: "/bin/bash"
+    - name: Start Tomcat
+      command: "nohup /home/ubuntu/tomcat/apache-tomcat-9.0.8/bin/startup.sh" 
